@@ -1,0 +1,55 @@
+public class SaldoJFrame extends javax.swing.JFrame {
+
+    /**
+     * Creates new form SaldoJFrame
+     */
+    public SaldoJFrame() {
+        initComponents();
+        
+        Connection con;
+        Conexion conn = new Conexion();
+        
+        try{
+            con = conn.getConnection();
+            PreparedStatement ps = con.prepareStatement("SELECT saldo FROM cuenta WHERE id = 1");
+            
+            ResultSet rs =  ps.executeQuery();
+            
+            if(rs.next()){
+                jtxtfMonto.setText(rs.getString("saldo"));
+            } else{
+                JOptionPane.showMessageDialog(null, "Error");
+            }
+            
+        } catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error: " + e);
+        }
+    }
+//este es el codigo de la conexion
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+/**
+ *
+ * @author eduar
+ */
+public class Conexion {
+    
+    public Connection getConnection(){
+        Connection con = null;
+        
+        String base = "bancomx";
+        String url = "jdbc:mysql://localhost:3306/"+base;
+        String user = "root";
+        String password = "";
+        
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            con = (Connection) DriverManager.getConnection(url, user, password);
+        } catch(Exception e){
+            System.err.println(e);
+        }
+        return con;
+    }
+    
+}
